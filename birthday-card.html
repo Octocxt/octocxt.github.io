@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --pink: #ff4d8d;
+      --pink-light: #ff9abf;
+      --pink-pale: #fff0f6;
+      --gold: #f7c948;
+      --dark: #2a0a1a;
+      --white: #fff;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 30% 20%, #ffb3d1 0%, #ff6fa8 40%, #c1185b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '💗 💕 💗 💕 💗 💕 💗 💕 💗 💕';
+      position: fixed;
+      top: -20px;
+      left: 0;
+      width: 200%;
+      font-size: 28px;
+      opacity: 0.12;
+      white-space: nowrap;
+      animation: floatHearts 12s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes floatHearts {
+      from { transform: translateX(0) translateY(0); }
+      to   { transform: translateX(-50%) translateY(110vh); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999;
+      display: none;
+    }
+
+    .scene {
+      position: relative;
+      z-index: 1;
+      perspective: 1000px;
+      padding: 20px;
+    }
+
+    .envelope {
+      position: relative;
+      width: min(420px, 92vw);
+      background: #fff8fb;
+      border-radius: 6px 6px 14px 14px;
+      box-shadow:
+        0 2px 0 #f0a0c0,
+        0 4px 0 #e080a8,
+        0 30px 80px rgba(180, 0, 80, 0.35),
+        inset 0 0 40px rgba(255,180,210,0.2);
+      overflow: visible;
+    }
+
+    .envelope__flap {
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-left: calc(min(420px, 92vw) / 2) solid transparent;
+      border-right: calc(min(420px, 92vw) / 2) solid transparent;
+      border-top: 160px solid #ffb3d1;
+      transform-origin: top center;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      filter: drop-shadow(0 4px 8px rgba(200,0,80,0.15));
+    }
+
+    .envelope.open .envelope__flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: linear-gradient(90deg, #ff4d8d, #ff9abf, #ff4d8d);
+      border-radius: 0 0 14px 14px;
+    }
+
+    .envelope__body {
+      padding: 48px 36px 40px;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      text-align: center;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card__deco {
+      font-size: 22px;
+      color: var(--pink);
+      opacity: 0.5;
+      margin-bottom: 8px;
+      letter-spacing: 12px;
+    }
+
+    .card__eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c06080;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .card__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 8vw, 48px);
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .btn-arena {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .surprise-btn {
+      background: linear-gradient(135deg, var(--pink), #ff85b3);
+      color: white;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(255, 77, 141, 0.45);
+      white-space: nowrap;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    @keyframes shake {
+      0%,100% { rotate: 0deg; }
+      25%      { rotate: -6deg; }
+      75%      { rotate: 6deg; }
+    }
+
+    .surprise-btn.shake {
+      animation: shake 0.35s ease;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #c06080;
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+      min-height: 20px;
+    }
+
+    .card--reveal {
+      animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.7) rotate(-3deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    .card__stars {
+      font-size: 28px;
+      margin-bottom: 14px;
+      animation: spreadStars 2s ease infinite alternate;
+    }
+
+    @keyframes spreadStars {
+      from { letter-spacing: 4px; }
+      to   { letter-spacing: 12px; }
+    }
+
+    .card__reveal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 34px;
+      color: var(--pink);
+      margin-bottom: 20px;
+    }
+
+    .card__message {
+      font-size: 15px;
+      color: #6a2040;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .card__message--big {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-style: italic;
+      color: var(--dark);
+    }
+
+    .card__sign {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #c06080;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="scene">
+  <div class="envelope" id="envelope">
+    <div class="envelope__flap"></div>
+    <div class="envelope__body" id="cardBody"></div>
+  </div>
+</div>
+
+<script>
+  const CONFETTI_COLORS = ['#ff6b9d','#ff9a9e','#ffd700','#ff85a1','#ff4d8d','#fff','#ffa8c5']
+  const MAX_ATTEMPTS = 8
+
+  let attempts = 0
+  let revealed = false
+  let btnX = 0, btnY = 0
+
+  // --- RENDER ---
+  function render() {
+    const body = document.getElementById('cardBody')
+    if (!revealed) {
+      body.innerHTML = `
+        <div class="card card--front">
+          <div class="card__deco">✦</div>
+          <p class="card__eyebrow">a little something for you</p>
+          <h1 class="card__title">Happy<br/>Birthday<br/>mau 🎂</h1>
+          <div class="btn-arena">
+            <button
+              class="surprise-btn"
+              id="surpriseBtn"
+              style="transform: translate(${btnX}px, ${btnY}px)"
+            >🎁 Click!</button>
+          </div>
+          <p class="hint" id="hint"></p>
+        </div>
+      `
+      document.getElementById('surpriseBtn').addEventListener('mouseenter', handleInteract)
+      document.getElementById('surpriseBtn').addEventListener('touchstart', handleInteract)
+      document.getElementById('surpriseBtn').addEventListener('click', handleInteract)
+      updateHint()
+    } else {
+      document.getElementById('envelope').classList.add('open')
+      body.innerHTML = `
+        <div class="card card--reveal">
+          <div class="card__stars">✨ 🌟 ✨</div>
+          <h2 class="card__reveal-title">Love you 🌹</h2>
+          <p class="card__message">You are the most beautiful person I know.<br/>Every day with you is a gift.</p>
+          <p class="card__message card__message--big">Happy Birthday mau 💖</p>
+          <p class="card__sign">— forever yours 🌹</p>
+        </div>
+      `
+      startConfetti()
+    }
+  }
+
+  function updateHint() {
+    const hint = document.getElementById('hint')
+    if (!hint) return
+    const left = MAX_ATTEMPTS - attempts - 1
+    if (attempts === 0) { hint.textContent = ''; return }
+    if (attempts >= 3) {
+      hint.textContent = `Almost! ${left} more ${left === 1 ? 'try' : 'tries'}...`
+    } else {
+      hint.textContent = `Try ${MAX_ATTEMPTS - attempts} more ${MAX_ATTEMPTS - attempts === 1 ? 'time' : 'times'}!`
+    }
+  }
+
+  function handleInteract(e) {
+    e.preventDefault()
+    if (revealed) return
+
+    if (attempts >= MAX_ATTEMPTS - 1) {
+      revealed = true
+      render()
+      return
+    }
+
+    btnX = (Math.random() - 0.5) * 180
+    btnY = (Math.random() - 0.5) * 120
+    attempts++
+
+    const btn = document.getElementById('surpriseBtn')
+    btn.style.transform = `translate(${btnX}px, ${btnY}px)`
+    btn.classList.add('shake')
+    setTimeout(() => btn.classList.remove('shake'), 400)
+    updateHint()
+  }
+
+  // --- CONFETTI ---
+  function startConfetti() {
+    const canvas = document.getElementById('confetti')
+    canvas.style.display = 'block'
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    const ctx = canvas.getContext('2d')
+
+    const particles = Array.from({ length: 150 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -10,
+      r: Math.random() * 8 + 4,
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      tilt: Math.random() * 10 - 10,
+      tiltAngle: 0,
+      tiltSpeed: Math.random() * 0.1 + 0.05,
+      speed: Math.random() * 3 + 2,
+    }))
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      particles.forEach(p => {
+        ctx.beginPath()
+        ctx.lineWidth = p.r / 2
+        ctx.strokeStyle = p.color
+        ctx.moveTo(p.x + p.tilt + p.r / 4, p.y)
+        ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4)
+        ctx.stroke()
+        p.tiltAngle += p.tiltSpeed
+        p.y += p.speed
+        p.tilt = Math.sin(p.tiltAngle) * 15
+        if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width }
+      })
+      requestAnimationFrame(draw)
+    }
+    draw()
+  }
+
+  render()
+</script>
+</body>
+</html>
